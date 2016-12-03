@@ -7,6 +7,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.sinovoice.util.ConfigUtil;
 import com.example.sinovoice.util.HciCloudSysHelper;
 import com.example.sinovoice.util.HciCloudTtsHelper;
 import com.sinovoice.hcicloudsdk.common.HciErrorCode;
@@ -20,7 +21,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Button btnStop;
     private HciCloudSysHelper mHciCloudSysHelper;
     private HciCloudTtsHelper mHciCloudTtsHelper;
-    private String initCapkeys = "tts.local.synth";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +54,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Toast.makeText(this, "系统初始化失败，错误码=" + errorCode, Toast.LENGTH_SHORT).show();
             return;
         }
-        mHciCloudTtsHelper.initTtsPlayer(this, initCapkeys);
+        boolean bool = mHciCloudTtsHelper.initTtsPlayer(this, ConfigUtil.CAP_KEY_TTS_LOCAL);
+        if (bool == false) {
+            Toast.makeText(this, "播放器初始化失败", Toast.LENGTH_SHORT).show();
+        }
     }
 
     /**
@@ -80,7 +83,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 mHciCloudTtsHelper.pauseTtsPlayer();
                 break;
             case R.id.btn_play:
-                mHciCloudTtsHelper.playTtsPlayer(etText.getText().toString(), "tts.local.synth");
+                mHciCloudTtsHelper.playTtsPlayer(etText.getText().toString(), ConfigUtil.CAP_KEY_TTS_LOCAL);
                 break;
             case R.id.btn_resume:
                 mHciCloudTtsHelper.resumeTtsPlayer();

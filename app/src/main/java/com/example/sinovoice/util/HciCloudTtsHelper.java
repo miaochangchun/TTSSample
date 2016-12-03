@@ -35,14 +35,21 @@ public class HciCloudTtsHelper {
      * 播放器初始化
      * @param context   上下文
      * @param initCapkeys   需要初始化的capkey，可以设置为多个，中间以；间隔
+     * @return true播放器初始化成功，false初始化失败
      */
-    public void initTtsPlayer(Context context, String initCapkeys){
+    public boolean initTtsPlayer(Context context, String initCapkeys){
         mTtsPlayer = new TTSPlayer();
         String strConfig = getTtsInitParam(context, initCapkeys);
         mTtsPlayer.init(strConfig, new TTSEventProcess());
         //设置使用AudioFocus机制
         mTtsPlayer.setContext(context);
+        //mTtsPlayer.setPlayerRouteFlag(0); 可以再次设置播放器的通道
         Log.d(TAG, "initTtsPlayer Success.");
+        if (mTtsPlayer.getPlayerState() == TTSCommonPlayer.PLAYER_STATE_IDLE) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
